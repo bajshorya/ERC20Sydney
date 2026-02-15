@@ -23,8 +23,11 @@ export default function SydneyFun() {
   const [transferAmount, setTransferAmount] = useState("");
   const [approveAddress, setApproveAddress] = useState("");
   const [approveAmount, setApproveAmount] = useState("");
+  const [transferFromSender, setTransferFromSender] = useState("");
+  const [transferFromRecipient, setTransferFromRecipient] = useState("");
+  const [transferFromAmount, setTransferFromAmount] = useState("");
   const [checkBalanceAddress, setCheckBalanceAddress] = useState("");
-  const [fundFaucetAmount, setFundFaucetAmount] = useState(""); // New state for faucet funding
+  const [fundFaucetAmount, setFundFaucetAmount] = useState("");
 
   const isOwner =
     isConnected && address?.toLowerCase() === OWNER_ADDRESS.toLowerCase();
@@ -69,6 +72,18 @@ export default function SydneyFun() {
         ? [checkBalanceAddress as `0x${string}`]
         : undefined,
     });
+
+  const { data: currentAllowance, refetch: refetchAllowance } = useReadContract(
+    {
+      address: CONTRACT_ADDRESS,
+      abi: CONTRACT_ABI,
+      functionName: "allowance",
+      args:
+        transferFromSender && address
+          ? [transferFromSender as `0x${string}`, address as `0x${string}`]
+          : undefined,
+    },
+  );
 
   const { data: faucetBalance, refetch: refetchFaucetBalance } =
     useReadContract({
@@ -132,6 +147,13 @@ export default function SydneyFun() {
   } = useWriteContract();
 
   const {
+    writeContract: transferFrom,
+    data: transferFromHash,
+    error: transferFromError,
+    isPending: transferFromIsPending,
+  } = useWriteContract();
+
+  const {
     writeContract: approve,
     data: approveHash,
     error: approveError,
@@ -168,6 +190,11 @@ export default function SydneyFun() {
   const { isLoading: transferIsConfirming, isSuccess: transferIsConfirmed } =
     useWaitForTransactionReceipt({ hash: transferHash });
 
+  const {
+    isLoading: transferFromIsConfirming,
+    isSuccess: transferFromIsConfirmed,
+  } = useWaitForTransactionReceipt({ hash: transferFromHash });
+
   const { isLoading: approveIsConfirming, isSuccess: approveIsConfirmed } =
     useWaitForTransactionReceipt({ hash: approveHash });
 
@@ -185,6 +212,7 @@ export default function SydneyFun() {
       mintIsConfirmed ||
       burnIsConfirmed ||
       transferIsConfirmed ||
+      transferFromIsConfirmed ||
       claimIsConfirmed ||
       fundIsConfirmed
     ) {
@@ -193,12 +221,14 @@ export default function SydneyFun() {
       refetchFaucetBalance();
       refetchCanClaim();
       refetchTimeUntilNextClaim();
+      refetchAllowance();
       if (checkBalanceAddress) refetchCheckedBalance();
     }
   }, [
     mintIsConfirmed,
     burnIsConfirmed,
     transferIsConfirmed,
+    transferFromIsConfirmed,
     claimIsConfirmed,
     fundIsConfirmed,
     refetchTotalSupply,
@@ -206,6 +236,7 @@ export default function SydneyFun() {
     refetchFaucetBalance,
     refetchCanClaim,
     refetchTimeUntilNextClaim,
+    refetchAllowance,
     refetchCheckedBalance,
     checkBalanceAddress,
   ]);
@@ -243,6 +274,23 @@ export default function SydneyFun() {
       abi: CONTRACT_ABI,
       functionName: "transfer",
       args: [transferAddress as `0x${string}`, parseEther(transferAmount)],
+    });
+  };
+
+  const handleTransferFrom = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!transferFromSender || !transferFromRecipient || !transferFromAmount)
+      return;
+
+    transferFrom({
+      address: CONTRACT_ADDRESS,
+      abi: CONTRACT_ABI,
+      functionName: "transferFrom",
+      args: [
+        transferFromSender as `0x${string}`,
+        transferFromRecipient as `0x${string}`,
+        parseEther(transferFromAmount),
+      ],
     });
   };
 
@@ -633,6 +681,99 @@ export default function SydneyFun() {
                   </p>
                 )}
               </form>
+            </div>
+
+            <div className="border p-4 rounded border-blue-300 bg-blue-50">
+              <h2 className="text-xl font-bold mb-4 text-blue-700">
+                🔄 Transfer From (Use Allowance)
+              </h2>
+              <form
+                onSubmit={handleTransferFrom}
+                className="flex flex-col gap-4"
+              >
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm">From Address (Sender)</label>
+                  <input
+                    type="text"
+                    value={transferFromSender}
+                    onChange={(e) => setTransferFromSender(e.target.value)}
+                    placeholder="0x..."
+                    className="border p-2 rounded font-mono text-sm"
+                    disabled={transferFromIsPending || transferFromIsConfirming}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm">To Address (Recipient)</label>
+                  <input
+                    type="text"
+                    value={transferFromRecipient}
+                    onChange={(e) => setTransferFromRecipient(e.target.value)}
+                    placeholder="0x..."
+                    className="border p-2 rounded font-mono text-sm"
+                    disabled={transferFromIsPending || transferFromIsConfirming}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm">Amount (SYD)</label>
+                  <input
+                    type="number"
+                    step="0.001"
+                    value={transferFromAmount}
+                    onChange={(e) => setTransferFromAmount(e.target.value)}
+                    placeholder="25"
+                    className="border p-2 rounded"
+                    disabled={transferFromIsPending || transferFromIsConfirming}
+                  />
+                </div>
+
+                {transferFromSender && address && (
+                  <div className="text-sm p-2 bg-gray-100 rounded">
+                    <p>
+                      Current Allowance:{" "}
+                      <span className="font-bold">
+                        {formatAmount(currentAllowance as bigint)} SYD
+                      </span>
+                    </p>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={
+                    transferFromIsPending ||
+                    transferFromIsConfirming ||
+                    !transferFromSender ||
+                    !transferFromRecipient ||
+                    !transferFromAmount
+                  }
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 self-start"
+                >
+                  {transferFromIsPending
+                    ? "Check Wallet..."
+                    : transferFromIsConfirming
+                      ? "Confirming..."
+                      : "Transfer From"}
+                </button>
+                {transferFromHash && (
+                  <p className="text-xs">
+                    Tx: {transferFromHash.slice(0, 10)}...
+                  </p>
+                )}
+                {transferFromIsConfirmed && (
+                  <p className="text-green-600 text-sm">
+                    ✅ TransferFrom successful!
+                  </p>
+                )}
+                {transferFromError && (
+                  <p className="text-red-600 text-sm">
+                    ❌ {transferFromError.message}
+                  </p>
+                )}
+              </form>
+              <p className="text-xs text-gray-500 mt-2">
+                ⓘ Use this after approving tokens. You must have allowance from
+                the sender.
+              </p>
             </div>
 
             <div className="border p-4 rounded border-y-gray-100 bg-gray-700">
