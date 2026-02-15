@@ -415,7 +415,7 @@ export default function SydneyFun() {
                 </p>
                 {isOwner && (
                   <p className="text-sm mt-1">
-                    👑 You are the contract owner (mint access granted)
+                    You are the contract owner (mint access granted)
                   </p>
                 )}
               </div>
@@ -433,7 +433,7 @@ export default function SydneyFun() {
           <div className="flex flex-col gap-6">
             {isOwner && (
               <div className="border p-4 rounded">
-                <h2 className="text-xl font-bold mb-4">👑 Owner Mint</h2>
+                <h2 className="text-xl font-bold mb-4"> Owner Mint</h2>
                 <form onSubmit={handleMint} className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
                     <label className="text-sm">Recipient Address</label>
@@ -819,7 +819,7 @@ export default function SydneyFun() {
                         ? "Check Wallet..."
                         : claimIsConfirming
                           ? "Confirming..."
-                          : "💧 Claim 10 SYD"}
+                          : "Claim 10 SYD"}
                     </button>
                     <p className="text-sm text-gray-500 mt-2">
                       You can claim once every 24 hours
@@ -966,14 +966,14 @@ export default function SydneyFun() {
                   <p className="text-gray-600">Contract Owner:</p>
                   <p className="font-mono break-all">
                     {(contractOwner as string) || "Loading..."}
-                    {contractOwner === OWNER_ADDRESS && " 👑"}
+                    {contractOwner === OWNER_ADDRESS && " "}
                   </p>
                 </div>
                 <div>
                   <p className="text-gray-600">Faucet Owner:</p>
                   <p className="font-mono break-all">
                     {(faucetOwner as string) || "Loading..."}
-                    {faucetOwner === OWNER_ADDRESS && " 👑"}
+                    {faucetOwner === OWNER_ADDRESS && " "}
                   </p>
                 </div>
                 <div>
