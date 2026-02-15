@@ -727,7 +727,7 @@ export default function SydneyFun() {
                 </div>
 
                 {transferFromSender && address && (
-                  <div className="text-sm p-2 bg-gray-100 rounded">
+                  <div className="text-sm p-2 bg-gray-600 rounded">
                     <p>
                       Current Allowance:{" "}
                       <span className="font-bold">
