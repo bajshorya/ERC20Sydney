@@ -1,4 +1,4 @@
-export const FAUCET_ADDRESS = "0x1AC1164f18247F17A497Ef0AA14256e196096A6f";
+export const FAUCET_ADDRESS = "0x62972322238B152F751Ff6C76Ea38C4e0eb4c38D";
 export const FAUCET_ABI = [
   {
     type: "constructor",
