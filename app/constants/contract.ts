@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0xB36E987E14C43a088EBdd5fc64e144e3a903d842";
+export const CONTRACT_ADDRESS = "0x1cF9FCD370E26726532a3aB36c8C89180Fc19Ee4";
 export const CONTRACT_ABI = [
   {
     type: "constructor",
@@ -102,6 +102,13 @@ export const CONTRACT_ABI = [
   },
   {
     type: "function",
+    name: "renounceOwnership",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "symbol",
     inputs: [],
     outputs: [{ name: "", type: "string", internalType: "string" }],
@@ -200,6 +207,19 @@ export const CONTRACT_ABI = [
   },
   {
     type: "event",
+    name: "OwnershipRenounced",
+    inputs: [
+      {
+        name: "previousOwner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
     name: "Transfer",
     inputs: [
       {
@@ -224,3 +244,20 @@ export const CONTRACT_ABI = [
     anonymous: false,
   },
 ];
+/**
+ * 
+shoryabaj@Shoryas-MacBook-Air Sydney %   forge create \
+  --rpc-url=https://eth-sepolia.g.alchemy.com/v2/6lqgvSLMLZS5GM2ZtvoY4 \
+  --private-key=0291c815f1bf36045ef78401437b3f8d987101812d59da25450c2b856d032e50 \ 
+  --constructor-args=1000000000000000000000000 \
+  --broadcast \
+  src/SydneyToken.sol:SydneyToken
+[⠊] Compiling...
+[⠢] Compiling 2 files with Solc 0.8.28
+[⠆] Solc 0.8.28 finished in 129.23ms
+Compiler run successful!
+Deployer: 0x0f0fB75E27F3E6f497810937b5610691B907297c
+Deployed to: 0x1cF9FCD370E26726532a3aB36c8C89180Fc19Ee4
+Transaction hash: 0xa7d12332c2de92299cb334be3e5174149cf32887be801683dd5a3bfb615e8cfe
+shoryabaj@Shoryas-MacBook-Air Sydney % 
+ */

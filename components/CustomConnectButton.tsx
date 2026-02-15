@@ -15,7 +15,7 @@ export function CustomConnectButton() {
 
   if (isConnected) {
     return (
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 ">
         <div className="flex items-center gap-2 px-4 py-2 border rounded">
           <div className="w-2 h-2 bg-green-500 rounded-full" />
           <div>
@@ -27,7 +27,7 @@ export function CustomConnectButton() {
         </div>
         <button
           onClick={() => disconnect()}
-          className="px-4 py-2 text-sm border rounded"
+          className="px-4 py-2 text-sm border rounded hover:cursor-pointer hover:bg-gray-100"
         >
           Disconnect
         </button>
