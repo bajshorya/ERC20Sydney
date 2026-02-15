@@ -683,7 +683,7 @@ export default function SydneyFun() {
               </form>
             </div>
 
-            <div className="border p-4 rounded border-blue-300 bg-blue-50">
+            <div className="border p-4 rounded border-gray-300">
               <h2 className="text-xl font-bold mb-4 text-blue-700">
                 🔄 Transfer From (Use Allowance)
               </h2>
