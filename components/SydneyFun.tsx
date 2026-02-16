@@ -372,25 +372,9 @@ export default function SydneyFun() {
         <div className="mb-10">
           <div className="text-3xl font-bold mb-7 flex gap-5">
             <div className="w-full ">
-              <Image
-                src="/want.jpeg"
-                alt="Sydney Token"
-                width={400}
-                height={300}
-                className="rounded-lg w-full h-[36vh] object-cover object-center shadow-md shadow-gray-400 opacity-10 absolute top-0 left-0"
-              />
               <div>
                 <div>{(tokenName as string) || "SydneyToken"}</div>
 
-                <div className="w-40 h-40 rounded-full overflow-hidden mt-10 border-4 border-gray-300">
-                  <Image
-                    src="/syd.jpeg"
-                    alt="Sydney Token"
-                    width={160}
-                    height={160}
-                    className="w-full h-full object-cover scale-120 shadow-lg transition-transform duration-300 hover:scale-125"
-                  />
-                </div>
               </div>
             </div>
           </div>

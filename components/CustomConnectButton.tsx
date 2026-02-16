@@ -3,19 +3,43 @@
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { useState } from "react";
 
-export const OWNER_ADDRESS = "0x8C3B3a31689a76Ae1cCf730A7B39Fe49D190FaC3";
+export const OWNER_ADDRESS = "0x0f0fB75E27F3E6f497810937b5610691B907297c";
+
+function DisconnectButton() {
+  const { disconnect } = useDisconnect();
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
+
+  const handleDisconnect = () => {
+    setIsDisconnecting(true);
+    try {
+      disconnect();
+    } catch (error) {
+      console.error("Disconnect error:", error);
+    }
+    setTimeout(() => setIsDisconnecting(false), 1000);
+  };
+
+  return (
+    <button
+      onClick={handleDisconnect}
+      disabled={isDisconnecting}
+      className="px-4 py-2 text-sm border rounded hover:cursor-pointer hover:bg-gray-100 disabled:opacity-50"
+    >
+      {isDisconnecting ? "Disconnecting..." : "Disconnect"}
+    </button>
+  );
+}
 
 export function CustomConnectButton() {
   const { address, isConnected } = useAccount();
   const { connect, connectors, error } = useConnect();
-  const { disconnect } = useDisconnect();
   const [showWallets, setShowWallets] = useState(false);
 
   const isOwner = address?.toLowerCase() === OWNER_ADDRESS.toLowerCase();
 
   if (isConnected) {
     return (
-      <div className="flex items-center gap-3 ">
+      <div className="flex items-center gap-3">
         <div className="flex items-center gap-2 px-4 py-2 border rounded">
           <div className="w-2 h-2 bg-green-500 rounded-full" />
           <div>
@@ -25,12 +49,7 @@ export function CustomConnectButton() {
             </span>
           </div>
         </div>
-        <button
-          onClick={() => disconnect()}
-          className="px-4 py-2 text-sm border rounded hover:cursor-pointer hover:bg-gray-100"
-        >
-          Disconnect
-        </button>
+        <DisconnectButton />
       </div>
     );
   }
@@ -39,7 +58,7 @@ export function CustomConnectButton() {
     <div className="relative">
       <button
         onClick={() => setShowWallets(!showWallets)}
-        className="px-5 py-2.5 text-sm border rounded"
+        className="px-5 py-2.5 text-sm border rounded hover:cursor-pointer hover:bg-gray-100"
       >
         Connect Wallet
       </button>
@@ -62,32 +81,22 @@ export function CustomConnectButton() {
                     connect({ connector });
                     setShowWallets(false);
                   }}
-                  className="w-full px-3 py-2.5 text-sm text-left hover:bg-gray-100 rounded"
+                  className="w-full px-3 py-2.5 text-sm text-left hover:bg-gray-100 rounded flex items-center gap-3"
                 >
-                  <div className="flex items-center gap-3">
-                    {connector.name === "MetaMask" && (
-                      <span className="text-xl">🦊</span>
-                    )}
-                    {connector.name === "WalletConnect" && (
-                      <span className="text-xl">🔗</span>
-                    )}
-                    {connector.name === "Coinbase Wallet" && (
-                      <span className="text-xl">🪙</span>
-                    )}
-                    {connector.name === "Injected" && (
-                      <span className="text-xl">🔌</span>
-                    )}
-                    {![
-                      "MetaMask",
-                      "WalletConnect",
-                      "Coinbase Wallet",
-                      "Injected",
-                    ].includes(connector.name) && (
-                      <span className="text-xl">📱</span>
-                    )}
-                    <span className="flex-1">{connector.name}</span>
-                    <span className="text-gray-400">→</span>
-                  </div>
+                  {connector.name === "MetaMask" && (
+                    <span className="text-xl">🦊</span>
+                  )}
+                  {connector.name === "WalletConnect" && (
+                    <span className="text-xl">🔗</span>
+                  )}
+                  {connector.name === "Coinbase Wallet" && (
+                    <span className="text-xl">🪙</span>
+                  )}
+                  {connector.name === "Injected" && (
+                    <span className="text-xl">🔌</span>
+                  )}
+                  <span className="flex-1">{connector.name}</span>
+                  <span className="text-gray-400">→</span>
                 </button>
               ))}
             </div>
