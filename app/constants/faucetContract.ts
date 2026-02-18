@@ -1,4 +1,4 @@
-export const FAUCET_ADDRESS = "0x62972322238B152F751Ff6C76Ea38C4e0eb4c38D";
+export const FAUCET_ADDRESS = "0x1C80b5263C9A4976d3a5e32Ae089F2FFdb3c11E4";
 export const FAUCET_ABI = [
   {
     type: "constructor",
@@ -263,4 +263,11 @@ export const FAUCET_ABI = [
     ],
     anonymous: false,
   },
+  { type: "error", name: "CoolDownPeriodNotOver", inputs: [] },
+  { type: "error", name: "InsufficientBalance", inputs: [] },
+  { type: "error", name: "InsufficientFaucetBalance", inputs: [] },
+  { type: "error", name: "InvalidAmount", inputs: [] },
+  { type: "error", name: "MaxClaimsReached", inputs: [] },
+  { type: "error", name: "OnlyOwner", inputs: [] },
+  { type: "error", name: "ZeroAddress", inputs: [] },
 ];

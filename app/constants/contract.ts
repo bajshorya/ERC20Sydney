@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0xed574e99165a8919b9d0AC3557A7edcad09d351C";
+export const CONTRACT_ADDRESS = "0xdD368Fe6D18264fb15A65AEB6B030951065149D8";
 export const CONTRACT_ABI = [
   {
     type: "constructor",
@@ -243,4 +243,8 @@ export const CONTRACT_ABI = [
     ],
     anonymous: false,
   },
+  { type: "error", name: "InsufficientAllowance", inputs: [] },
+  { type: "error", name: "InsufficientBalance", inputs: [] },
+  { type: "error", name: "OnlyOwner", inputs: [] },
+  { type: "error", name: "ZeroAddress", inputs: [] },
 ];
